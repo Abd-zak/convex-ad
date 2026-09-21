@@ -1,10 +1,12 @@
-# convex-ad
+# ConvexAD (TensorFlow)
 
 <img width="1240" height="820" alt="image" src="https://github.com/user-attachments/assets/df4366b5-9a40-466b-a82e-a13eff3cfae0" />
 
 ---
 Geometrically regularized automatic differentiation framework for BCDI phase retrieval.
 ---
+
+This is the TensorFlow implementation of ConvexAD. The actively developed JAX version is at [matteomasto/convexad](https://github.com/matteomasto/convexad).
 
 ## Requirements
 - **Python ≥ 3.12**
@@ -24,10 +26,10 @@ source .venv/bin/activate   # on Windows: .venv\Scripts\activate
 
 ### Step 2 — Install from GitHub
 ```bash
-pip install git+https://github.com/matteomasto/convex-ad.git
+pip install git+https://github.com/matteomasto/convexad_tf.git
 ```
 
-This will install `convex_ad` and all its dependencies, including TensorFlow with CUDA support, and TensorRT.
+This installs the distribution `convexad_tf`, which provides the package `convex_ad`, and all its dependencies, including TensorFlow with CUDA support, and TensorRT.
 
 ---
 
@@ -36,8 +38,8 @@ This will install `convex_ad` and all its dependencies, including TensorFlow wit
 If you want to develop or modify the code — or if you want easy access to the example notebooks — clone the repository directly:
 
 ```bash
-git clone https://github.com/matteomasto/convex-ad.git
-cd convex-ad
+git clone https://github.com/matteomasto/convexad_tf.git
+cd convexad_tf
 pip install -e .
 ```
 
@@ -60,20 +62,20 @@ print(convex_ad.__version__)   # should print 0.1.0
 If you installed via `pip install git+...`, the notebook files are not copied to your machine. Retrieve them by cloning the repository separately:
 
 ```bash
-git clone https://github.com/matteomasto/convex-ad.git
-cp -r convex-ad/examples ./examples
-cp -r convex-ad/notebooks ./notebooks
-rm -rf convex-ad   # optional cleanup
+git clone https://github.com/matteomasto/convexad_tf.git
+cp -r convexad_tf/examples ./examples
+cp -r convexad_tf/notebooks ./notebooks
+rm -rf convexad_tf   # optional cleanup
 ```
 
 Or, if you prefer not to use git, download as a ZIP:
 
 ```bash
-curl -L https://github.com/matteomasto/convex-ad/archive/refs/heads/main.zip -o main.zip
+curl -L https://github.com/matteomasto/convexad_tf/archive/refs/heads/main.zip -o main.zip
 unzip main.zip
-cp -r convex-ad-main/examples ./examples
-cp -r convex-ad-main/notebooks ./notebooks
-rm -rf convex-ad-main main.zip
+cp -r convexad_tf-main/examples ./examples
+cp -r convexad_tf-main/notebooks ./notebooks
+rm -rf convexad_tf-main main.zip
 ```
 
 ### Step 2 — Install Jupyter

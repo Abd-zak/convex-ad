@@ -38,6 +38,9 @@ model = convex_ad.PhaseRetrievalModel(
     support_kwargs=support_kwargs,
 )
 
+# Build the variables eagerly, before the first (graph mode) training step.
+support, amplitude, phase = model(Iobs)
+
 # ------------------------------------------------------------
 # Optimizer (fixed: AMSGrad)
 # ------------------------------------------------------------
@@ -56,6 +59,10 @@ optimizer = tf.keras.optimizers.Adam(
     epsilon=1e-6,          
     amsgrad=True,         
 )
+
+# Create the optimizer variables eagerly (Keras 3 needs this before the first train_step).
+_ = model(None)
+optimizer.apply_gradients([(tf.zeros_like(v), v) for v in model.trainable_variables])
 
 # ------------------------------------------------------------
 # Training hyperparameters
@@ -84,7 +91,7 @@ for step in range(n_steps):
     )
 
     if step % 200 == 0:
-        print(f"step={step:5d} | loss={loss.numpy():.6e}")
+        print(f"step={step:5d} | loss={np.min(loss.numpy()):.6e}")
 
 # ------------------------------------------------------------
 # Extract reconstruction
@@ -92,7 +99,7 @@ for step in range(n_steps):
 
 support, amplitude, phase = model()
 
-idx = np.argmin(convexad.fourier_loss(support, amplitude, phase, Iobs).numpy())
+idx = np.argmin(fourier_loss(support, amplitude, phase, Iobs).numpy())
 
 support = support.numpy()[idx]
 amplitude = amplitude.numpy()[idx]
@@ -114,21 +121,20 @@ from convex_ad import viz
 obj_shp = tf.shape(obj)
 obs_shp = tf.shape(Iobs)
 
-dD = obs_shp[0] - obj_shp[1]
-dH = obs_shp[1] - obj_shp[2]
-dW = obs_shp[2] - obj_shp[3]
+dD = obs_shp[0] - obj_shp[0]
+dH = obs_shp[1] - obj_shp[1]
+dW = obs_shp[2] - obj_shp[2]
 
 pD0 = dD // 2; pD1 = dD - pD0
 pH0 = dH // 2; pH1 = dH - pH0
 pW0 = dW // 2; pW1 = dW - pW0
 
-obj_p = tf.pad(obj, [[0,0],[pD0,pD1],[pH0,pH1],[pW0,pW1]])
+obj_p = tf.pad(obj, [[pD0,pD1],[pH0,pH1],[pW0,pW1]])
 
 # --- FFT ---
 Icalc = tf.abs(tf.signal.ifftshift(
     tf.signal.fft3d(tf.signal.fftshift(obj_p))
-    
-)**2
+))**2
 
 viz.plot_3D_projections(Icalc, log_scale=True)
 viz.plot_2D_slices_middle_only_phase(obj)
