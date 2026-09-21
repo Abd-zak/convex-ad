@@ -1,7 +1,7 @@
 [project]
-name = "convex-ad"
+name = "convexad_tf"
 version = "0.1.0"
-description = "A geometrically regularized automatic differentiation framework for BCDI phase retrieval"
+description = "tensorflow version of ConvexAD: A geometrically regularized automatic differentiation framework for BCDI phase retrieval"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
